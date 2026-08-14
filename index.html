@@ -1,0 +1,246 @@
+ <!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>给小宝的信 🌸</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    background: linear-gradient(160deg, #fff3f0 0%, #ffe9ec 40%, #ffd9c2 100%);
+    font-family: "PingFang SC", "Microsoft YaHei", "Noto Serif SC", serif;
+    color: #5b4636;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  /* 花瓣 */
+  .petal {
+    position: fixed; top: -10%;
+    width: 14px; height: 14px;
+    background: radial-gradient(circle at 30% 30%, #ffd1dc, #ff9eb5);
+    border-radius: 80% 0 80% 0;
+    opacity: .75;
+    animation: fall linear infinite;
+    z-index: 1;
+    pointer-events: none;
+  }
+  @keyframes fall {
+    0% { transform: translateY(-10vh) rotate(0deg); opacity: .8; }
+    100% { transform: translateY(110vh) rotate(360deg); opacity: .3; }
+  }
+
+  /* 开场遮罩 */
+  #start {
+    position: fixed; inset: 0; z-index: 10;
+    background: linear-gradient(160deg, #ffe9ec, #ffd1dc);
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column; gap: 20px;
+    cursor: pointer; text-align: center;
+    transition: opacity .8s ease;
+  }
+  #start h1 { font-size: 24px; color: #c96a86; font-weight: 600; }
+  #start p { color: #a97979; font-size: 15px; padding: 0 30px; line-height: 1.7; }
+  #start .btn {
+    margin-top: 6px; padding: 12px 28px; border-radius: 999px;
+    background: #ff9eb5; color: #fff; font-size: 15px;
+    box-shadow: 0 4px 18px rgba(255,158,181,.4);
+  }
+
+  /* 信纸 */
+  #wrap {
+    position: relative; z-index: 2;
+    min-height: 100%;
+    display: flex; align-items: flex-start; justify-content: center;
+    padding: 60px 18px 100px;
+  }
+  #letter {
+    max-width: 640px; width: 100%;
+    font-size: 16.5px; line-height: 2;
+    white-space: pre-wrap;
+    background: rgba(255,255,255,.62);
+    backdrop-filter: blur(6px);
+    border-radius: 18px;
+    padding: 30px 26px;
+    box-shadow: 0 10px 40px rgba(255,150,150,.22);
+    transition: filter 1.4s ease, transform 1.4s ease, box-shadow 1.4s ease;
+    filter: brightness(.88);
+  }
+  #letter.bright {
+    filter: brightness(1.03);
+    transform: scale(1.01);
+    box-shadow: 0 14px 50px rgba(255,150,150,.35);
+  }
+  .cursor {
+    display: inline-block; width: 8px; height: 1em; vertical-align: text-bottom;
+    background: #e98aa0; margin-left: 2px;
+    animation: blink 1s steps(1) infinite;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  /* 底部音乐 */
+  #music {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 5;
+    display: flex; justify-content: center; padding: 10px 0;
+    background: linear-gradient(transparent, rgba(255,233,236,.9));
+  }
+  #music iframe { width: 90%; max-width: 420px; height: 52px; border: 0; border-radius: 8px; }
+</style>
+</head>
+<body>
+
+<div id="start">
+  <h1>给小宝的一封信 🌸</h1>
+  <p>戴上耳机，点一下屏幕<br/>音乐响起，信会慢慢念给你听</p>
+  <div class="btn">轻轻点我</div>
+</div>
+
+<div id="wrap">
+  <div id="letter"></div>
+</div>
+
+<div id="music">
+  <!-- ⚠️ 这里放音乐：把下面 src 里的 SONG_ID 换成 made for me 的真实数字 id -->
+  <iframe id="player" src="https://music.163.com/outchain/player?type=2&id=3386491316&auto=0&height=52" allow="autoplay"></iframe>
+</div>
+
+<script>
+// ===== 花瓣 =====
+for (let i = 0; i < 26; i++) {
+  const p = document.createElement('div');
+  p.className = 'petal';
+  p.style.left = Math.random() * 100 + 'vw';
+  p.style.animationDuration = (7 + Math.random() * 7) + 's';
+  p.style.animationDelay = (Math.random() * 6) + 's';
+  p.style.transform = `scale(${0.55 + Math.random() * 0.75})`;
+  document.body.appendChild(p);
+}
+
+// ===== 信 =====
+const letter = `给我最爱的小宝：
+
+今天是8月14号凌晨，小宝大概睡了吧，我心里五味杂陈，所以想要写这封信给小宝
+
+昨天你跟我说，你第一次觉得我有一点烦的时候，其实我有一点难过。但比起难过，我一直在想，你为什么会因为这件事情这么害怕
+
+我想了很久，然后我觉得我大概理解了
+
+你害怕的可能并不只是今天有一点不想和我说话，而是因为你以前的经历让你觉得，这种感觉好像曾经是一些关系走向结束的开始。也许，小宝之前的亲密关系持续时间都很短，然后在快要结束前就有这样的信号。所以当它这一次出现在我身上的时候，你会下意识地害怕，是不是有一天也会像以前一样，慢慢不喜欢我，最后离开我
+
+我其实也会害怕
+
+但是，我想先告诉小宝的是，我不会因为你昨天不太想和我交流，就觉得你不爱我了
+
+其实我现在很能理解你为什么会有这样的状态。你最近真的有太多事情了，SAT这个事情真的占据我们很多时间精力，还一直在带来压力。还有身体上的事情，那件矫正的衣服穿起来那么难受，你还要穿一年。换成是我，我也不一定每天都有足够的精力去和一个人聊天
+
+所以如果有一天你很累，只想一个人待着，甚至看到我的消息都暂时不太想回复，我希望你不用因为这件事情害怕
+
+你可以直接告诉我，说我今天有点累，想自己待一会儿
+
+我会接受的
+
+但是我也想和小宝每天都打电话睡觉，就像我们之前约定好的，每天一定要打视频，哪怕只有一小会儿
+
+我也想给小宝说，喜欢一个人，并不意味着我们必须每时每刻都想和他在一起。就像我再喜欢你，也一定会有很累、不想说话、只想安静一会儿的时候。那并不意味着喜欢消失了，只意味着我们都是有情绪，有压力，需要自己空间的人
+
+而且我也想和小宝说一句对不起
+
+我知道我有时候可能还没有那么有经验。我很喜欢你，所以有的时候可能太想在视频里见到你，太想和你待在一起，反而没有注意到你其实已经很累了。我也还在学习怎么去爱一个人，怎么在想靠近你的时候，也能够给你足够的空间
+
+所以我不希望你因为害怕失去我，而强迫自己一直保持开心，一直想和我聊天，一直证明自己还喜欢我
+
+小宝真的不需要不需要这样。
+
+你可以有烦的时候，可以有累的时候，可以有不想说话的时候，也可以偶尔觉得我有一点烦。我希望你可以把这些真实的感觉告诉我，而不是一个人偷偷害怕
+
+因为我真正想要的，也不是一个永远不会产生任何负面情绪的你
+
+我想要的是一个可以跟我说我今天真的很累，我不想和你说话 我讨厌你 我喜欢你我爱你 你是蠢猪 你是小狗 的你
+
+我们以后可能会有很多这样的时刻。尤其是我去了英国以后，我们隔着很远的距离，可能不能像现在一样随时见到彼此。我们都会有自己的考试，自己的生活，自己的朋友，也一定会有想一个人待着的时候
+
+我不想让距离变成一种每天都要完成的任务，更不想让今天有没有聊很多天变成衡量我们还爱不爱的标准
+
+但是我也会一直给小宝分享好玩的事情 也希望小宝多给我分享
+
+我更希望我们可以慢慢学会一件事情
+
+即使今天没有说很多话，我也知道你还是你，你也知道我还是我
+
+即使我们暂时离开彼此一点点，我们也不会因此失去彼此
+
+至于你害怕的那件事情，有一天会不会真的不喜欢对方
+
+其实我没有办法向小宝保证，我们未来永远不会改变。我也不想用一句我们永远不会分开来敷衍小宝的恐惧
+
+但我可以告诉你，我现在依然很喜欢你，也依然很认真地想和你走下去
+
+如果以后真的遇到什么让我们疲惫、难过或者困惑的事情，我希望我们不要因为害怕它，就提前逃跑
+
+我们可以一起看看它到底是什么
+
+如果是压力，我们一起熬过去。如果是距离，我们一起想办法。如果是相处方式出了问题，我们就一起改变
+
+我想和你一起学会的，不是怎么让我们的感情永远没有问题
+
+而是当问题出现的时候，我们依然愿意站在彼此身边（写到这里天咋都朦朦亮了，我还是晚上再发给你吧）
+
+我特别喜欢的作家Helen说，"Alone we can do so little; together we can do so much."所以短期来看，我们也许没有刚开始感情中的那些激情，但是这正是美妙的地方。与其和不同的人经历很多段经历，和一个人经历很多新的事情更加有趣。不可否认，这段旅途中会有很多很多困难，我们两个也许都会觉得很难解决，也许有一天我们会因为距离而难过，会因为各自的压力而没有那么多精力陪伴彼此，也会有一些时刻觉得对方没有想象中那么完美（比如我没有办法智能切换年上和哭包）。但我觉得真正重要的，从来都不是两个人能不能永远保持最开始的热烈，而是在热烈慢慢沉淀之后，我们还愿不愿意一起面对那些不那么美好的部分
+
+我不害怕我们以后会遇到问题，因为我知道我们都还在学习怎么去爱一个人，也还在学习怎么成为更好的自己。我更希望的是，当问题真的出现的时候，我们不要把它当成我们是不是不适合的证明，而是把它当成一道需要我们一起解开的难题。它可能比SAT里面最难的阅读题都要难很多本多，也许我们甚至会暂时找不到答案，但至少我希望，在面对它的时候，我们永远是站在同一边的
+
+因为我想和你经历的，从来不只是那些轻松快乐没有任何矛盾的日子。我也想和你经历那些迷茫疲惫，需要相互理解的时刻。这样等我们有一天回头看的时候，记住的就不只是我们曾经很喜欢彼此，而是我们好厉害，我们曾经一起走过那么远的路，也真的一起把很多困难走过来了"
+
+所以昨天的小宝绝对没有让我失望
+
+你愿意告诉我这些，反而让我觉得，你是真的把我、把我们放在心上
+
+小宝一定一定不用因为昨天觉得我有一点烦而害怕
+
+小宝要好好休息，好好准备SAT，也好好照顾自己
+
+I will always be here for you
+
+超级超级爱你的景子轩`;
+
+// 高潮段出现时屏幕渐亮（定位到"因为我想和你经历的"这句）
+const brightAt = letter.lastIndexOf('因为我想和你经历的');
+
+const el = document.getElementById('letter');
+let i = 0;
+let timer = null;
+
+function type() {
+  if (i <= brightAt) el.classList.remove('bright');
+  else el.classList.add('bright');
+
+  el.innerHTML = letter.slice(0, i) + '<span class="cursor"></span>';
+  i++;
+  if (i > letter.length) {
+    clearInterval(timer);
+    el.innerHTML = letter;
+    return;
+  }
+
+  const ch = letter[i - 1];
+  let delay = 42;
+  if (ch === '\n') delay = 360;
+  else if (['，','。','、','）','"'].includes(ch)) delay = 260;
+  else if (['：','！','？'].includes(ch)) delay = 380;
+
+  timer = setTimeout(type, delay);
+}
+
+// 开场点击后启动
+document.getElementById('start').addEventListener('click', function () {
+  this.style.opacity = '0';
+  setTimeout(() => this.remove(), 800);
+  // 音乐自动播放（用户手势已触发，浏览器允许）
+  const iframe = document.getElementById('player');
+  iframe.src = iframe.src.replace('auto=0', 'auto=1');
+  type();
+});
+</script>
+</body>
+</html>
