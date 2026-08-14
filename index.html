@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8" />
@@ -15,7 +15,6 @@
     overflow-y: auto;
   }
 
-  /* 花瓣 */
   .petal {
     position: fixed; top: -10%;
     width: 14px; height: 14px;
@@ -31,7 +30,6 @@
     100% { transform: translateY(110vh) rotate(360deg); opacity: .3; }
   }
 
-  /* 开场遮罩 */
   #start {
     position: fixed; inset: 0; z-index: 10;
     background: linear-gradient(160deg, #ffe9ec, #ffd1dc);
@@ -48,7 +46,6 @@
     box-shadow: 0 4px 18px rgba(255,158,181,.4);
   }
 
-  /* 信纸 */
   #wrap {
     position: relative; z-index: 2;
     min-height: 100%;
@@ -79,16 +76,17 @@
   }
   @keyframes blink { 50% { opacity: 0; } }
 
-  /* 底部音乐 */
-  #music {
-    position: fixed; left: 0; right: 0; bottom: 0; z-index: 5;
-    display: flex; justify-content: center; padding: 10px 0;
-    background: linear-gradient(transparent, rgba(255,233,236,.9));
+  #hint {
+    position: fixed; bottom: 18px; left: 0; right: 0; z-index: 5;
+    text-align: center; font-size: 12px; color: #c9a0a8; opacity: 0;
+    transition: opacity .6s ease; pointer-events: none;
   }
-  #music iframe { width: 90%; max-width: 420px; height: 52px; border: 0; border-radius: 8px; }
+  #hint.show { opacity: .7; }
 </style>
 </head>
 <body>
+
+<audio id="bgm" src="bgm.mp3" loop preload="auto"></audio>
 
 <div id="start">
   <h1>给小宝的一封信 🌸</h1>
@@ -100,13 +98,10 @@
   <div id="letter"></div>
 </div>
 
-<div id="music">
-  <!-- ⚠️ 这里放音乐：把下面 src 里的 SONG_ID 换成 made for me 的真实数字 id -->
-  <iframe id="player" src="https://music.163.com/outchain/player?type=2&id=3386491316&auto=0&height=52" allow="autoplay"></iframe>
-</div>
+<div id="hint">🎵 如果没声音，点一下屏幕任意位置</div>
 
 <script>
-// ===== 花瓣 =====
+// 花瓣
 for (let i = 0; i < 26; i++) {
   const p = document.createElement('div');
   p.className = 'petal';
@@ -117,7 +112,7 @@ for (let i = 0; i < 26; i++) {
   document.body.appendChild(p);
 }
 
-// ===== 信 =====
+// 信内容
 const letter = `给我最爱的小宝：
 
 今天是8月14号凌晨，小宝大概睡了吧，我心里五味杂陈，所以想要写这封信给小宝
@@ -204,17 +199,13 @@ I will always be here for you
 
 超级超级爱你的景子轩`;
 
-// 高潮段出现时屏幕渐亮（定位到"因为我想和你经历的"这句）
 const brightAt = letter.lastIndexOf('因为我想和你经历的');
-
 const el = document.getElementById('letter');
-let i = 0;
-let timer = null;
+let i = 0, timer = null;
 
 function type() {
   if (i <= brightAt) el.classList.remove('bright');
   else el.classList.add('bright');
-
   el.innerHTML = letter.slice(0, i) + '<span class="cursor"></span>';
   i++;
   if (i > letter.length) {
@@ -222,24 +213,35 @@ function type() {
     el.innerHTML = letter;
     return;
   }
-
   const ch = letter[i - 1];
-  let delay = 42;
-  if (ch === '\n') delay = 360;
-  else if (['，','。','、','）','"'].includes(ch)) delay = 260;
-  else if (['：','！','？'].includes(ch)) delay = 380;
-
+  let delay = 22;
+  if (ch === '\n') delay = 160;
+  else if (['，','。','、','）','"'].includes(ch)) delay = 120;
+  else if (['：','！','？'].includes(ch)) delay = 140;
   timer = setTimeout(type, delay);
 }
 
-// 开场点击后启动
-document.getElementById('start').addEventListener('click', function () {
-  this.style.opacity = '0';
-  setTimeout(() => this.remove(), 800);
-  // 音乐自动播放（用户手势已触发，浏览器允许）
-  const iframe = document.getElementById('player');
-  iframe.src = iframe.src.replace('auto=0', 'auto=1');
+// 开始
+const start = document.getElementById('start');
+const bgm = document.getElementById('bgm');
+
+start.addEventListener('click', () => {
+  start.style.opacity = '0';
+  setTimeout(() => start.remove(), 800);
+  bgm.volume = 0.6;
+  bgm.play().catch(() => {
+    // 极少数机型第一次手势被拒，显示提示让她再点一下
+    document.getElementById('hint').classList.add('show');
+  });
   type();
+});
+
+// 兜底：页面任意处再点一次也能恢复音乐
+document.addEventListener('click', () => {
+  if (bgm.paused) {
+    bgm.play().catch(()=>{});
+    document.getElementById('hint').classList.remove('show');
+  }
 });
 </script>
 </body>
